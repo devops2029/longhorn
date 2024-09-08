@@ -1,0 +1,101 @@
+Building your own very first container image lab
+
+To follow along with this lab, you need to ensure that,
+
+You have Rancher Desktop installed on your laptop, and
+All the previous labs are completed.
+The workflow for this lab is split up into four sections.
+
+Create a Docker file
+Create a configuration file for the nginx webserver
+Create your static app
+Build your container image
+Note: All the files for the labs can be downloaded by clicking the Download button in the demo.
+
+Create a Dockerfile
+To do this we are going to create a directory for our app and call that container-demo.
+
+Within this directory we will create the file called Dockerfile with the following content.
+
+FROM ubuntu:latest
+
+USER root
+
+RUN apt-get update
+RUN apt-get install -y nginx nodejs
+
+# Remove the default Nginx configuration file
+RUN rm -v /etc/nginx/nginx.conf
+
+# Copy a configuration file from the current directory
+ADD nginx.conf /etc/nginx/
+
+ADD web /usr/share/nginx/html/
+ADD web /var/www/html/
+
+# Append "daemon off;" to the beginning of the configuration
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+# Expose ports
+EXPOSE 90
+
+# Set the default command to execute
+# when creating a new container
+CMD service nginx start
+
+Save this file & close it.
+
+Create the configuration file for the webserver
+As mentioned during the demo lesson, we will be using an NGINX webserver to serve our static file.
+
+Create a file nginx.conf in the container-demo folder to setup the webserver.
+
+worker_processes 1;
+
+events { worker_connections 1024; }
+
+http {
+include    mime.types;
+sendfile on;
+server {
+root /usr/share/nginx/html/;
+index index.html;
+server_name localhost;
+listen 90;
+}
+}
+
+Save this file & close it.
+
+Create your application
+Next, we shall create our static file, index.html.
+
+This file will be served by the nginx webserver.
+
+To avoid any confusion, we will create a separate folder named web in the container-demo folder.
+
+This is where we shall place the index.html file with the following contents.
+
+<h1>Hi there, I'm running in a container!</h1>
+
+Save the file and close it.
+
+Since we are using the nginx webserver to serve the file on our browser, we will also create a mime.types file.
+
+types {
+text/html                             html htm shtml;
+}
+
+This is the file that helps the browser understand the mime types of the files served.
+
+Without it, the browser wouldn't be able to parse the information contained within these files.
+
+Save the file & close it.
+
+
+Build your image
+Run the nerdctl build command:
+
+nerdctl build --tag container-demo:latest .
+
+You can view the image you just created by using the nerdctl images command.

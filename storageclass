@@ -1,0 +1,44 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    longhorn.io/last-applied-configmap: |
+      kind: StorageClass
+      apiVersion: storage.k8s.io/v1
+      metadata:
+        name: longhorn
+        annotations:
+          storageclass.kubernetes.io/is-default-class: "true"
+      provisioner: driver.longhorn.io
+      allowVolumeExpansion: true
+      reclaimPolicy: "Delete"
+      volumeBindingMode: Immediate
+      parameters:
+        numberOfReplicas: "3"
+        staleReplicaTimeout: "30"
+        fromBackup: ""
+        fsType: "ext4"
+        dataLocality: "disabled"
+        unmapMarkSnapChainRemoved: "ignored"
+        disableRevisionCounter: "true"
+    storageclass.kubernetes.io/is-default-class: "true"
+  creationTimestamp: "2024-09-16T12:46:08Z"
+  name: longhorn
+  resourceVersion: "215941"
+  uid: 2aca4f6b-265b-49f3-bdf8-db445982296f
+parameters:
+  dataLocality: disabled
+  disableRevisionCounter: "true"
+  fromBackup: ""
+  fsType: ext4
+  numberOfReplicas: "3"
+  staleReplicaTimeout: "30"
+  unmapMarkSnapChainRemoved: ignored
+provisioner: driver.longhorn.io
+reclaimPolicy: Delete
+volumeBindingMode: Immediate

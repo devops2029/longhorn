@@ -1,0 +1,2 @@
+helm install longhorn ./chart --namespace longhorn-system --create-namespace
+kubectl  get crd | grep longhorn | awk '{print $1}'
